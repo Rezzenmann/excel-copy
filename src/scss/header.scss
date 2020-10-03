@@ -7,9 +7,11 @@
     right: 0;
     left: 0;
     height: $header-height;
-    padding: 8px 4px 0;
+    padding: 8px 8px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    background: #f8f8f8;
 
     & .input {
         margin: 0;
@@ -17,8 +19,8 @@
         min-width: 1px;
         color: #000;
         border: 1px solid transparent;
-        border-radius: 2px;
-        height: 20px;
+        border-radius: 5px;
+        height: 30px;
         font-size: 18px;
         line-height: 22px;
         outline: none;
@@ -28,11 +30,13 @@
         }
 
         &:focus {
-            border: 2px solid #1a73e8;
+            border: 2px solid #473bf0;
         }
     }
-
+    .button__wrapper {
+        display: flex;
+    }
     .button {
-        @include button(red);
+        @include button(#6665dd);
     }
 }
