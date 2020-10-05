@@ -34,6 +34,10 @@ export class Dom {
     off(eventName: any) {
         this.$elem.removeEventListener(eventName, this.$$listeners[eventName]);
     }
+
+    getAll(selector: string) {
+        return this.$elem.querySelectorAll(selector);
+    }
 }
 
 export function $(selector: string | HTMLDivElement) {
