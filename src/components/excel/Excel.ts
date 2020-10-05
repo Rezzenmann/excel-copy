@@ -1,5 +1,5 @@
 import { TExcelComp, TExcelCompInstances } from "../../types/index";
-import { $, Dom } from "../../core/dom";
+import { $ } from "../../core/dom";
 
 export class Excel {
     $el: HTMLDivElement;
@@ -34,8 +34,8 @@ export class Excel {
             component.init();
         });
 
-        // this.componentsInstances!.forEach((component) => {
-        //     component.destroy();
-        // });
+        this.componentsInstances!.forEach((component) => {
+            component.destroy();
+        });
     }
 }

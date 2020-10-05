@@ -15,7 +15,6 @@ export class DomListener {
     initDOMListeners() {
         this.listeners.forEach((listener) => {
             const method = methodName(listener);
-            console.log(Object.getPrototypeOf(this)[method].bind(this));
 
             this.$root.on(
                 listener,
