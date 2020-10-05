@@ -1,11 +1,12 @@
 import { ExcelComponent } from "../../core/ExcelComponent";
 
 export class Table extends ExcelComponent {
-    className: string;
-
-    constructor() {
-        super();
-        this.className = "excel__table";
+    static className = "excel__table";
+    constructor($root: any) {
+        super($root, {
+            name: "Table",
+            listeners: ["input"],
+        });
     }
     toHTML() {
         return `                    <div class="row">
@@ -66,5 +67,8 @@ export class Table extends ExcelComponent {
             <div class="cell">C3</div>
         </div>
     </div>`;
+    }
+    onInput(e: { target: HTMLDivElement }) {
+        console.log("onInput", e.target.textContent?.trim());
     }
 }

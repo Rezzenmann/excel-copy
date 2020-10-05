@@ -1,11 +1,14 @@
 export class Dom {
     $elem: HTMLDivElement;
-
+    $$listeners: {
+        [prop: string]: EventListener | EventListenerObject;
+    };
     constructor(selector: string | HTMLDivElement) {
         this.$elem =
             typeof selector === "string"
                 ? (document.querySelector(selector) as HTMLDivElement)
                 : selector;
+        this.$$listeners = {};
     }
 
     HTML(html?: string): HTMLDivElement | string {
@@ -20,6 +23,16 @@ export class Dom {
             node = node.$elem;
         }
         this.$elem.append(node);
+    }
+
+    on(eventName: any, eventFunc: EventListener | EventListenerObject) {
+        this.$$listeners[eventName] = eventFunc;
+
+        this.$elem.addEventListener(eventName, this.$$listeners[eventName]);
+    }
+
+    off(eventName: any) {
+        this.$elem.removeEventListener(eventName, this.$$listeners[eventName]);
     }
 }
 

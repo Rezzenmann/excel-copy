@@ -1,30 +1,41 @@
-import { TExcelComp } from "../../types/index";
+import { TExcelComp, TExcelCompInstances } from "../../types/index";
 import { $, Dom } from "../../core/dom";
 
 export class Excel {
     $el: HTMLDivElement;
-    components: TExcelComp;
-    // components accept only instances of classes declared in types, not classes itself.
+    componentsClasses: TExcelComp;
+    componentsInstances: TExcelCompInstances | null;
+
     constructor(
         selector: string = "#App",
-        options: { components: TExcelComp }
+        options: { componentsClasses: TExcelComp }
     ) {
         this.$el = document.querySelector(selector) as HTMLDivElement;
-        this.components = options.components;
+        this.componentsClasses = options.componentsClasses;
+        this.componentsInstances = null;
     }
 
-    getRoot(): Dom {
+    getRoot(): HTMLDivElement {
         const $root = $.create("div", "excel");
 
-        this.components.forEach((Component) => {
+        this.componentsInstances = this.componentsClasses.map((Component) => {
             const $excelComp = $.create("div", Component.className);
-            $excelComp.HTML(Component.toHTML());
+            const component = new Component($excelComp);
+            $excelComp.HTML(component.toHTML());
             $root.append($excelComp);
+            return component;
         });
-        return $root;
+        return $root.HTML() as HTMLDivElement;
     }
 
     render(): void {
-        this.$el.append(this.getRoot().HTML());
+        this.$el.append(this.getRoot());
+        this.componentsInstances!.forEach((component) => {
+            component.init();
+        });
+
+        // this.componentsInstances!.forEach((component) => {
+        //     component.destroy();
+        // });
     }
 }

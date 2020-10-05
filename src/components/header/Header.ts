@@ -1,17 +1,18 @@
+import { Dom } from "../../core/dom";
 import { ExcelComponent } from "../../core/ExcelComponent";
 
 export class Header extends ExcelComponent {
-    className: string;
+    static className = "excel__header";
 
-    constructor() {
-        super();
-        this.className = "excel__header";
+    constructor($root: Dom) {
+        super($root, {
+            name: "Header",
+            listeners: ["input", "click"],
+        });
     }
 
     toHTML() {
-        return `
-
-        <input type="text" class="input" value="Новая таблица" />
+        return `<input type="text" class="input" value="Новая таблица" />
 
         <div class="button__wrapper">
             <div class="button">
@@ -22,5 +23,12 @@ export class Header extends ExcelComponent {
                 <i class="material-icons">exit_to_app</i>
             </div>
         </div>`;
+    }
+
+    onInput(e: { target: HTMLInputElement }) {
+        console.log("onInput", e.target.value);
+    }
+    onClick(e: MouseEvent) {
+        console.log("onClick");
     }
 }
