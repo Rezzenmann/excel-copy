@@ -11,8 +11,10 @@
     border-bottom: 1px solid $border-color;
     padding: 7px 10px;
     display: flex;
+    align-items: center;
+    background: #f8f8f8;
 
-.button {
-    @include button(green);
-  }
+    .button {
+        @include button(#6665dd);
+    }
 }
