@@ -1,18 +1,94 @@
+import { Dom } from "../../core/dom";
 import { ExcelComponent } from "../../core/ExcelComponent";
 import { setTable } from "./table.template";
 
 export class Table extends ExcelComponent {
     static className = "excel__table";
+
     constructor($root: any) {
         super($root, {
             name: "Table",
-            listeners: ["input"],
+            listeners: ["input", "mousedown"],
         });
     }
+
     toHTML() {
         return setTable();
     }
-    onInput(e: { target: HTMLDivElement }) {
-        console.log("onInput", e.target.textContent?.trim());
+    onInput(e: { target: HTMLDivElement }) {}
+
+    onMousedown(e: { target: HTMLDivElement }) {
+        let that = this;
+
+        if (e.target.dataset.resize === "col") {
+            resizeCol(e, that);
+        } else if (e.target.dataset.resize === "row") {
+            resizeRow(e, that);
+        }
+    }
+}
+
+const resizeCol = (e: { target: HTMLDivElement }, that: any) => {
+    const $parent = e.target.closest(
+        `[data-type="resizeCol"]`
+    ) as HTMLDivElement;
+
+    const parentCoords = $parent!.getBoundingClientRect();
+    const cells = that.$root.getAll(`[data-num="${$parent.dataset.num}"]`);
+
+    document.onmousemove = (event) => {
+        const mouseX = event.pageX;
+        const delta = mouseX! - parentCoords.right;
+        const width = parentCoords.width + delta;
+        setMoveStyles(e.target, true);
+        $parent.style.width = width + "px";
+    };
+
+    document.onmouseup = () => {
+        setUpStyles(e.target, true);
+        document.onmousemove = null;
+        document.onmouseup = null;
+        cells.forEach((elem: HTMLDivElement) => {
+            elem.style.width = $parent!.getBoundingClientRect().width + "px";
+        });
+    };
+};
+
+const resizeRow = (e: { target: HTMLDivElement }, that: any) => {
+    const $parent = e.target.closest(
+        `[data-type="resizeRow"]`
+    ) as HTMLDivElement;
+
+    const parentCoords = $parent!.getBoundingClientRect();
+
+    document.onmousemove = (event) => {
+        const mouseY = event.pageY;
+        const delta = mouseY! - parentCoords.bottom;
+        const height = parentCoords.height + delta;
+        setMoveStyles(e.target, false);
+        $parent.style.height = height + "px";
+    };
+    document.onmouseup = () => {
+        setUpStyles(e.target, false);
+        document.onmousemove = null;
+        document.onmouseup = null;
+    };
+};
+
+function setMoveStyles(elem: HTMLDivElement, cols: Boolean = true) {
+    elem.style.opacity = "0.4";
+    if (cols) {
+        elem.style.height = "2000px";
+    } else {
+        elem.style.width = "2000px";
+    }
+}
+
+function setUpStyles(elem: HTMLDivElement, cols: Boolean = true) {
+    elem.style.opacity = "0";
+    if (cols) {
+        elem.style.height = "";
+    } else {
+        elem.style.width = "";
     }
 }

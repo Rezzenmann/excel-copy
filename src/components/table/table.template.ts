@@ -8,16 +8,24 @@ const colsChar: ITable = {
     end: "Z".charCodeAt(0),
 };
 
-function createRowInfo(rowNumber: number | string): string {
-    return `<div class='row-info'>${rowNumber > 0 ? rowNumber : ""}</div>`;
+function createRowInfo(rowNum: number | string): string {
+    return `<div class='row-info' data-type='resizeRow'  data-col='${rowNum}'>${
+        rowNum > 0
+            ? rowNum + `<div class='resize-row' data-resize='row'></div>`
+            : ""
+    }
+    </div>`;
 }
 
-function createRowDataCell(): string {
-    return `<div class="cell" contenteditable=""></div>`;
+function createRowDataCell(colNumber: number, rowNum: number): string {
+    return `<div class="cell" contenteditable="" data-num="${colNumber}" data-col='${rowNum}'></div>`;
 }
 
 function createRowDataCol(colNumber: number) {
-    return `<div class="column">${String.fromCharCode(colNumber)}</div>`;
+    return `<div class="column" data-type='resizeCol' data-num="${colNumber}">${String.fromCharCode(
+        colNumber
+    )}
+    <div class='resize-col' data-resize='col'></div></div>`;
 }
 
 function createRowData(rowNum: number) {
@@ -29,7 +37,7 @@ function createRowData(rowNum: number) {
         }
     } else {
         for (let i = colsChar.start; i < colsChar.end + 1; i++) {
-            rows.push(createRowDataCell());
+            rows.push(createRowDataCell(i, rowNum));
         }
     }
 
