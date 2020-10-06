@@ -37,6 +37,7 @@
             background-color: #6665dd;
             opacity: 0;
             cursor: row-resize;
+            z-index: 1000;
             &:hover {
                 opacity: 1;
             }
@@ -69,8 +70,9 @@
             background-color: #6665dd;
             opacity: 0;
             cursor: col-resize;
+            z-index: 1000;
             &:hover {
-                opacity: 1;
+                opacity: 1 !important;
             }
         }
     }

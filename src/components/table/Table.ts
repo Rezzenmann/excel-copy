@@ -8,7 +8,7 @@ export class Table extends ExcelComponent {
     constructor($root: any) {
         super($root, {
             name: "Table",
-            listeners: ["input", "mousedown", "mouseup"],
+            listeners: ["input", "mousedown"],
         });
     }
 
@@ -26,10 +26,6 @@ export class Table extends ExcelComponent {
             resizeRow(e, that);
         }
     }
-
-    onMouseup() {
-        document.onmousemove = null;
-    }
 }
 
 const resizeCol = (e: { target: HTMLDivElement }, that: any) => {
@@ -39,13 +35,21 @@ const resizeCol = (e: { target: HTMLDivElement }, that: any) => {
 
     const parentCoords = $parent!.getBoundingClientRect();
     const cells = that.$root.getAll(`[data-num="${$parent.dataset.num}"]`);
+
     document.onmousemove = (event) => {
         const mouseX = event.pageX;
         const delta = mouseX! - parentCoords.right;
         const width = parentCoords.width + delta;
-        // $parent.style.width = width + "px";
+        setMoveStyles(e.target, true);
+        $parent.style.width = width + "px";
+    };
+
+    document.onmouseup = () => {
+        setUpStyles(e.target, true);
+        document.onmousemove = null;
+        document.onmouseup = null;
         cells.forEach((elem: HTMLDivElement) => {
-            elem.style.width = width + "px";
+            elem.style.width = $parent!.getBoundingClientRect().width + "px";
         });
     };
 };
@@ -56,22 +60,35 @@ const resizeRow = (e: { target: HTMLDivElement }, that: any) => {
     ) as HTMLDivElement;
 
     const parentCoords = $parent!.getBoundingClientRect();
-    const rows = that.$root.getAll(`[data-col="${$parent.dataset.col}"]`);
 
     document.onmousemove = (event) => {
         const mouseY = event.pageY;
         const delta = mouseY! - parentCoords.bottom;
         const height = parentCoords.height + delta;
-        // $parent.style.height = height + "px";
-        rows.forEach((elem: HTMLDivElement) => {
-            elem.style.height = height + "px";
-        });
+        setMoveStyles(e.target, false);
+        $parent.style.height = height + "px";
+    };
+    document.onmouseup = () => {
+        setUpStyles(e.target, false);
+        document.onmousemove = null;
+        document.onmouseup = null;
     };
 };
 
-// 122 msScripting
-// 1495 msRendering
-// 355 msPainting
-// 290 msSystem
-// 2907 msIdle
-// 5170 msTotal
+function setMoveStyles(elem: HTMLDivElement, cols: Boolean = true) {
+    elem.style.opacity = "0.4";
+    if (cols) {
+        elem.style.height = "2000px";
+    } else {
+        elem.style.width = "2000px";
+    }
+}
+
+function setUpStyles(elem: HTMLDivElement, cols: Boolean = true) {
+    elem.style.opacity = "0";
+    if (cols) {
+        elem.style.height = "";
+    } else {
+        elem.style.width = "";
+    }
+}
