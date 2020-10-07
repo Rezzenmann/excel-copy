@@ -22,7 +22,7 @@ function createRowDataCell(colNumber: number, rowNum: number): string {
 }
 
 function createRowDataCol(colNumber: number) {
-    return `<div class="column" data-type='resizeCol' data-num="${colNumber}">${String.fromCharCode(
+    return `<div class="column unselectable" data-type='resizeCol' data-num="${colNumber}">${String.fromCharCode(
         colNumber
     )}
     <div class='resize-col' data-resize='col'></div></div>`;
